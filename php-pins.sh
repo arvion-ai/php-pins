@@ -58,6 +58,9 @@ if [ -t 1 ] && [ -z "${NO_COLOR:-}" ]; then color=1; fi
 # itself, and prints one line per pin, worst first. It is one single-quoted
 # string, so it holds no apostrophes: bash 3.2, the /bin/sh on macOS, cannot
 # parse a here-document inside $( ) that has them. The $ signs in it are awk's.
+# It runs with LC_ALL=C so it sorts paths byte by byte; under en_US.UTF-8 the
+# awk on macOS orders "Dockerfile" after "docker/", and the output would
+# differ from machine to machine.
 # shellcheck disable=SC2016
 prog='
 function day(iso,   p) {
@@ -528,7 +531,7 @@ for root in "$@"; do
 		-name '*.yml' -o -name '*.yaml' -o -name composer.json -o -name .php-version -o -name .tool-versions -o \
 		-name mise.toml -o -name .mise.toml -o -name devcontainer.json -o -name .devcontainer.json \) -print |
 		LC_ALL=C sort |
-		awk -v FIXED="$FIXED" -v UNTILS="$SECURITY_UNTIL" -v FIXEDON="$IMAGES_FIXED_ON" -v OS="$IMAGE_OS" \
+		LC_ALL=C awk -v FIXED="$FIXED" -v UNTILS="$SECURITY_UNTIL" -v FIXEDON="$IMAGES_FIXED_ON" -v OS="$IMAGE_OS" \
 			-v WPLATEST="$WORDPRESS_LATEST" -v ASOF="$DATA_AS_OF" -v ROOT="${root%/}" -v COLOR="$color" "$prog"
 done
 printf '\nPHP2Shell fixed releases: %s. What each line means: https://arvion.ai/tools/php-pins\n' "$(printf '%s' "$FIXED" | sed 's/ /, /g')"
