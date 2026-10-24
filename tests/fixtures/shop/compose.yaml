@@ -1,0 +1,25 @@
+services:
+  web:
+    image: "wordpress:php8.3-apache" # the site
+  db:
+    image: postgres:16
+  app:
+    image: php:8.4-fpm@sha256:4b1c0b2f6c0e8c7a4b9e3f1d2a6c5b8e7f0a1b2c3d4e5f60718293a4b5c6d7e8
+  pma:
+    image: phpmyadmin:5.2
+  worker:
+    image: php:${PHP_TAG:-8.5-cli}
+  old:
+    image: php:8.3-fpm-alpine3.18
+  legacy:
+    image: wordpress:6.4.2-php8.2-apache
+  cache:
+    image: ${REDIS_IMAGE}
+  laravel.test:
+    build:
+      context: ./vendor/laravel/sail/runtimes/8.2
+    image: sail-8.2/app
+  fpm:
+    image: bitnami/php-fpm:8.3.12
+  tooling:
+    image: myorg/php-tools:1.4.2

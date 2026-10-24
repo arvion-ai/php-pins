@@ -1,0 +1,43 @@
+name: test
+on:
+  push:
+  pull_request:
+permissions:
+  contents: read
+jobs:
+  linux:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        shell: [dash, bash, zsh, busybox sh]
+        awk: [mawk, gawk, original-awk, busybox awk]
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+      - name: Install shells and awks
+        run: sudo apt-get update -qq && sudo apt-get install -y -qq zsh busybox gawk mawk original-awk
+      - name: Put ${{ matrix.awk }} first on PATH as awk
+        run: |
+          mkdir -p "$RUNNER_TEMP/bin"
+          if [ "${{ matrix.awk }}" = "busybox awk" ]; then
+            printf '#!/bin/sh\nexec busybox awk "$@"\n' > "$RUNNER_TEMP/bin/awk"
+            chmod +x "$RUNNER_TEMP/bin/awk"
+          else
+            ln -s "$(command -v ${{ matrix.awk }})" "$RUNNER_TEMP/bin/awk"
+          fi
+          echo "$RUNNER_TEMP/bin" >> "$GITHUB_PATH"
+      - name: Run the tests with ${{ matrix.shell }}
+        env:
+          PHP_PINS_SH: ${{ matrix.shell }}
+        run: sh tests/run.sh
+  macos:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+      - name: Run the tests with the sh, awk, find, sort and sed macOS ships
+        run: sh tests/run.sh
+  shellcheck:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+      - run: shellcheck -s sh php-pins.sh tests/run.sh

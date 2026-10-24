@@ -1,0 +1,3 @@
+# The test repositories are compared byte for byte, and one of them has CRLF
+# line endings on purpose.
+tests/fixtures/** -text

@@ -1,0 +1,2 @@
+FROM --platform=linux/amd64 php:8.3.35-apache
+RUN a2enmod rewrite

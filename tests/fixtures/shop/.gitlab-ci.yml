@@ -1,0 +1,3 @@
+image: php:8.2.35-cli
+test:
+  script: phpunit

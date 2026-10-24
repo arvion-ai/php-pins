@@ -1,0 +1,6 @@
+FROM ubuntu:24.04
+RUN apt-get update \
+    && apt-get install -y php8.1-cli php8.1-fpm \
+       php8.1-mysql; \
+    rm -rf /var/lib/apt/lists/*
+FROM mlocati/php-extension-installer:latest AS ext
