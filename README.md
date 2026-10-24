@@ -1,13 +1,44 @@
-# php-pins
+<p align="center">
+  <img src="assets/banner.jpg" alt="php-pins: find every PHP version your repositories pin" width="100%">
+</p>
 
-Find every PHP version your repositories pin, and what PHP2Shell
-([CVE-2026-109618](https://github.com/php/php-src/security/advisories/GHSA-w8hw-w9fx-j79w),
+<p align="center">
+  <b>php-pins</b> · one POSIX shell script by <a href="https://arvion.ai">Arvion</a><br>
+  <i>Find every PHP version your repositories pin, and what PHP2Shell means for each one.</i>
+</p>
+
+<p align="center">
+  <a href="https://github.com/arvion-ai/php-pins/actions/workflows/test.yml"><img src="https://github.com/arvion-ai/php-pins/actions/workflows/test.yml/badge.svg" alt="Tests"></a>
+</p>
+
+---
+
+## Why it exists
+
+PHP2Shell ([CVE-2026-109618](https://github.com/php/php-src/security/advisories/GHSA-w8hw-w9fx-j79w),
 [CVE-2026-109619](https://github.com/php/php-src/security/advisories/GHSA-6wmf-4rv5-p3rp))
-means for each one.
+is fixed in PHP 8.5.12, 8.4.27, 8.3.36 and 8.2.35. A fix only lands where
+someone changes the PHP version a repository pins. In a company with many
+repositories, PHP is set in Dockerfiles, compose files, CI images, setup-php and
+`composer.json`, often more than once in each. The official Docker images for
+PHP 7.4, 8.0 and 8.1 are no longer rebuilt, so a pinned old tag never gets the
+fix.
 
-It is one POSIX shell script with one awk program. It reads the files under the
-folders you name and prints every PHP version they set, with what to do about
-each. It makes no network connection, runs nothing it finds and writes no files.
+This script lists every one of those pins. It reads the files under the folders
+you name, makes no network connection, runs nothing it finds and writes nothing.
+
+<table>
+  <tr>
+    <td width="33.33%"><img src="assets/reads.jpg" width="100%" alt="A conveyor belt carrying code crates, app buildings and a container with the PHP logo, pinned with a red map pin"></td>
+    <td width="33.33%"><img src="assets/judges.jpg" width="100%" alt="A crate with the PHP logo inside a scanning arch, a red map pin above it"></td>
+    <td width="33.33%"><img src="assets/output.jpg" width="100%" alt="Terminal output of php-pins with EOL, UPDATE, REBUILD, CHECK, OK and NOTE lines"></td>
+  </tr>
+  <tr>
+    <td valign="top"><b>Reads</b> Dockerfiles, compose, Kubernetes and CI files, <code>composer.json</code>, <code>devcontainer.json</code>, <code>.php-version</code>, DDEV, Lando, Sail and Platform.sh.</td>
+    <td valign="top"><b>Judges</b> each pin against PHP's fixed releases, its branch's end of life, and whether the official image tag still moves.</td>
+    <td valign="top"><b>Tells you</b> one line per pin, worst first, with what to do. Nothing leaves your machine.</td>
+  </tr>
+</table>
 
 ## Run it
 
@@ -78,10 +109,10 @@ the final word.
 
 ## Where it runs
 
-macOS and Linux, with the `sh` and `awk` they already have. Its output is
-byte-identical under dash, bash 5, bash 3.2 (the `/bin/sh` on macOS), zsh and
-BusyBox sh, and with BWK awk (the one on macOS), gawk, mawk and BusyBox awk.
-On Windows, use WSL.
+macOS and Linux, with the `sh` and `awk` they already have. CI runs the tests on
+every push on macOS, and on Linux under dash, bash, zsh and BusyBox sh, each with
+mawk, gawk, BWK awk (the one on macOS) and BusyBox awk. It has also been checked
+under bash 3.2, the `/bin/sh` on macOS. On Windows, use WSL.
 
 ## Tests
 
@@ -110,4 +141,17 @@ Remove anything private first. You can also write to hello@arvion.ai.
 
 ## License
 
-MIT, see [LICENSE](LICENSE). Made by [Arvion](https://arvion.ai).
+The code is MIT, see [LICENSE](LICENSE). The images in `assets/` are by Arvion and
+include the PHP logo by Colin Viebrock, which is licensed
+[CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/), so those images
+are shared under CC BY-SA 4.0 too. PHP is not affiliated with Arvion.
+
+---
+
+<p align="center">
+  <a href="https://arvion.ai/tools/php-pins"><b>arvion.ai/tools/php-pins</b></a>
+  ·
+  <a href="https://github.com/arvion-ai/php-pins/issues">Report a wrong verdict</a>
+  ·
+  <a href="https://arvion.ai">arvion.ai</a>
+</p>
